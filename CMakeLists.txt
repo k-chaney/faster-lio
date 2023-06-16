@@ -20,7 +20,7 @@ include(cmake/packages.cmake)
 add_definitions(-DROOT_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/\")
 
 # options
-option(WITH_IVOX_NODE_TYPE_PHC "Use PHC instead of default ivox node" OFF)
+option(WITH_IVOX_NODE_TYPE_PHC "Use PHC instead of default ivox node" ON)
 
 if (WITH_IVOX_NODE_TYPE_PHC)
     message("USING_IVOX_NODE_TYPE_PHC")

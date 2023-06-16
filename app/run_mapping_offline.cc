@@ -89,7 +89,7 @@ int main(int argc, char **argv) {
     LOG(INFO) << "Faster LIO average FPS: " << fps;
 
     LOG(INFO) << "save trajectory to: " << FLAGS_traj_log_file;
-    laser_mapping->Savetrajectory(FLAGS_traj_log_file);
+    laser_mapping->SaveBinaryTrajectory(FLAGS_traj_log_file);
 
     faster_lio::Timer::PrintAll();
     faster_lio::Timer::DumpIntoFile(FLAGS_time_log_file);

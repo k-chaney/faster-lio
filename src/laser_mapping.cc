@@ -441,10 +441,12 @@ bool LaserMapping::SyncPackages() {
             LOG(WARNING) << "Too few input point cloud!";
             lidar_end_time_ = measures_.lidar_bag_time_ + lidar_mean_scantime_;
         } else if (measures_.lidar_->points.back().curvature / double(1000) < 0.5 * lidar_mean_scantime_) {
+            LOG(WARNING) << "Shorter scan than expected";
             lidar_end_time_ = measures_.lidar_bag_time_ + lidar_mean_scantime_;
         } else {
             scan_num_++;
-            lidar_end_time_ = measures_.lidar_bag_time_ + measures_.lidar_->points.back().curvature / double(1000);
+            lidar_end_time_ = measures_.lidar_bag_time_ + measures_.lidar_->points.back().curvature / double(1000); // <<<<
+
             lidar_mean_scantime_ +=
                 (measures_.lidar_->points.back().curvature / double(1000) - lidar_mean_scantime_) / scan_num_;
         }
@@ -788,9 +790,35 @@ void LaserMapping::Savetrajectory(const std::string &traj_file) {
 
     ofs << "#timestamp x y z q_x q_y q_z q_w" << std::endl;
     for (const auto &p : path_.poses) {
-        ofs << std::fixed << std::setprecision(6) << p.header.stamp.toSec() << " " << std::setprecision(15)
+        ofs << p.header.stamp.toSec() / 1000 << " " << std::setprecision(15)
             << p.pose.position.x << " " << p.pose.position.y << " " << p.pose.position.z << " " << p.pose.orientation.x
             << " " << p.pose.orientation.y << " " << p.pose.orientation.z << " " << p.pose.orientation.w << std::endl;
+    }
+
+    ofs.close();
+}
+
+void LaserMapping::SaveBinaryTrajectory(const std::string &traj_file) {
+    std::ofstream ofs;
+    ofs.open(traj_file, std::ios::binary);
+    if (!ofs.is_open()) {
+        LOG(ERROR) << "Failed to open traj_file: " << traj_file;
+        return;
+    }
+
+    for (const auto &p : path_.poses) {
+      std::vector<double> pose_line;
+      pose_line.resize( 8 );
+      pose_line[0] = p.header.stamp.toSec();
+      pose_line[1] = p.pose.position.x;
+      pose_line[2] = p.pose.position.y;
+      pose_line[3] = p.pose.position.z;
+      pose_line[4] = p.pose.orientation.x;
+      pose_line[5] = p.pose.orientation.y;
+      pose_line[6] = p.pose.orientation.z;
+      pose_line[7] = p.pose.orientation.w;
+
+      ofs.write((char*)pose_line.data(), sizeof(double)*8);
     }
 
     ofs.close();

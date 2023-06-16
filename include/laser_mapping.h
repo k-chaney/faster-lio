@@ -60,6 +60,7 @@ class LaserMapping {
     void PublishFrameBody(const ros::Publisher &pub_laser_cloud_body);
     void PublishFrameEffectWorld(const ros::Publisher &pub_laser_cloud_effect_world);
     void Savetrajectory(const std::string &traj_file);
+    void SaveBinaryTrajectory(const std::string &traj_file);
 
     void Finish();
 
@@ -130,6 +131,7 @@ class LaserMapping {
     double timediff_lidar_wrt_imu_ = 0.0;
     double last_timestamp_lidar_ = 0;
     double lidar_end_time_ = 0;
+    long long int lidar_end_time_record_ = 0;
     double last_timestamp_imu_ = -1.0;
     double first_lidar_time_ = 0.0;
     bool lidar_pushed_ = false;
