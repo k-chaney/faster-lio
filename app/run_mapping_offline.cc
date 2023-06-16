@@ -16,7 +16,7 @@
 DEFINE_string(config_file, "./config/avia.yaml", "path to config file");
 DEFINE_string(bag_file, "/home/xiang/Data/dataset/fast_lio2/avia/2020-09-16-quick-shack.bag", "path to the ros bag");
 DEFINE_string(time_log_file, "./Log/time.log", "path to time log file");
-DEFINE_string(traj_log_file, "./Log/traj.txt", "path to traj log file");
+DEFINE_string(traj_log_file, "./Log/traj.bin", "path to traj log file");
 
 void SigHandle(int sig) {
     faster_lio::options::FLAG_EXIT = true;
