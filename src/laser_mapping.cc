@@ -805,6 +805,8 @@ void LaserMapping::SaveBinaryTrajectory(const std::string &traj_file) {
         LOG(ERROR) << "Failed to open traj_file: " << traj_file;
         return;
     }
+    std::vector<double> header = {std::nan(""), 1.0, -1.0, std::nan(""), std::nan(""), 1.0, -1.0, std::nan("")};
+    ofs.write((char*)header.data(), sizeof(double)*header.size());
 
     for (const auto &p : path_.poses) {
       std::vector<double> pose_line;
@@ -818,8 +820,10 @@ void LaserMapping::SaveBinaryTrajectory(const std::string &traj_file) {
       pose_line[6] = p.pose.orientation.z;
       pose_line[7] = p.pose.orientation.w;
 
-      ofs.write((char*)pose_line.data(), sizeof(double)*8);
+      ofs.write((char*)pose_line.data(), sizeof(double)*pose_line.size());
     }
+
+    ofs.write((char*)header.data(), sizeof(double)*header.size());
 
     ofs.close();
 }
