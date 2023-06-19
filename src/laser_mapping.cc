@@ -450,6 +450,9 @@ bool LaserMapping::SyncPackages() {
             lidar_mean_scantime_ +=
                 (measures_.lidar_->points.back().curvature / double(1000) - lidar_mean_scantime_) / scan_num_;
         }
+        // THE ABOVE DOESN"T ALWAYS WORK!! YOU CAN GET OFF FOR SOME REASON!!
+        // THIS IS PROBABLY BECAUSE THE POINTCLOUD2 HAS BAD ASSUMPTIONS
+        lidar_end_time_ = measures_.lidar_bag_time_ + 0.1; // <<<<
 
         measures_.lidar_end_time_ = lidar_end_time_;
         lidar_pushed_ = true;
