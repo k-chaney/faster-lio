@@ -347,6 +347,8 @@ void LaserMapping::Run() {
         }
     }
 
+    PrintState(state_point_);
+
     // Debug variables
     frame_num_++;
 }
